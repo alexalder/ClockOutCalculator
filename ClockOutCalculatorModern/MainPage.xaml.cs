@@ -1,8 +1,10 @@
 ﻿using Microsoft.QueryStringDotNET;
 using Microsoft.Toolkit.Uwp.Notifications; // Notifications library
 using System;
+using Windows.ApplicationModel;
 using Windows.Storage;
 using Windows.UI.Notifications;
+using Windows.UI.Popups;
 using Windows.UI.Xaml.Controls;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
@@ -25,6 +27,7 @@ namespace ClockOutCalculatorModern
             dateTimePicker1.Time = (TimeSpan)localSettings.Values["picker1"];
             dateTimePicker2.Time = (TimeSpan)localSettings.Values["picker2"];
             dateTimePicker3.Time = (TimeSpan)localSettings.Values["picker3"];
+            SetupStartup();
         }
 
         private void dateTimePicker1_TimeChanged(object sender, TimePickerValueChangedEventArgs e)
@@ -180,6 +183,37 @@ namespace ClockOutCalculatorModern
 
                 // And create the toast notification
                 notificationManager.AddToSchedule(toast);
+            }
+        }
+
+        async private void SetupStartup()
+        {
+            StartupTask startupTask = await StartupTask.GetAsync("MyStartupId");
+            //requestResult.Text = startupTask.State.ToString();
+            switch (startupTask.State)
+            {
+                case StartupTaskState.Disabled:
+                    // Task is disabled but can be enabled.
+                    StartupTaskState newState = await startupTask.RequestEnableAsync();
+                    //requestResult.Text = newState.ToString();
+                    //Debug.WriteLine("Request to enable startup, result = {0}", newState);
+                    break;
+                case StartupTaskState.DisabledByUser:
+                    // Task is disabled and user must enable it manually.
+                    MessageDialog dialog = new MessageDialog(
+                        "I know you don't want this app to run " +
+                        "as soon as you sign in, but if you change your mind, " +
+                        "you can enable this in the Startup tab in Task Manager.",
+                        "TestStartup");
+                    await dialog.ShowAsync();
+                    break;
+                case StartupTaskState.DisabledByPolicy:
+                    //Debug.WriteLine(
+                    //"Startup disabled by group policy, or not supported on this device");
+                    break;
+                case StartupTaskState.Enabled:
+                    //Debug.WriteLine("Startup is enabled.");
+                    break;
             }
         }
     }
