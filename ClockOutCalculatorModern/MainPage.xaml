@@ -21,6 +21,8 @@
         </Image>
         <TextBox x:Name="lunchLabel" HorizontalAlignment="Left" Margin="61,119,0,0" Text="1:00" VerticalAlignment="Top" BorderBrush="{x:Null}" Height="34" Width="54" FontSize="18"/>
         <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Margin="10,131,0,0" Text="Durata pranzo" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="8"/>
+        <TextBox x:Name="breakLabel" HorizontalAlignment="Left" Margin="498,170,0,0" Text="10:00" VerticalAlignment="Top" BorderBrush="{x:Null}" Height="34" Width="64" FontSize="18" TextAlignment="Left"/>
+        <TextBlock x:Name="textBlock_Copy" HorizontalAlignment="Left" Margin="457,175,0,0" Text="Pausa" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="16" RenderTransformOrigin="1.227,0.608"/>
 
     </Grid>
 </Page>

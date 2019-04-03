@@ -66,21 +66,11 @@ namespace ClockOutCalculatorModern
         {
             if (lunchLabel != null)
             {
-                
                 TimeSpan lunchTime = CalculateLunch();
+                SetClockOut(lunchTime);
 
-                if (lunchTime.TotalMinutes > 60)
-                {
-                    clockOut = dateTimePicker1.Time.Add(lunchTime).Add(new TimeSpan(8, 0, 0));
-                    lunchLabel.Text = "1:" + (lunchTime.Minutes).ToString("D2");
-                }
-                else
-                {
-                    clockOut = dateTimePicker1.Time.Add(new TimeSpan(9, 0, 0));
-                    lunchLabel.Text = "1:00";
-                }
+                SetBreak();
 
-                clockOutLabel.Text = clockOut.Hours.ToString("D2") + ":" + clockOut.Minutes.ToString("D2");
                 return true;
             }
             return false;
@@ -96,6 +86,28 @@ namespace ClockOutCalculatorModern
             {
                 return (new TimeSpan(0, 0, 0));
             }
+        }
+
+        private void SetClockOut(TimeSpan lunchTime)
+        {
+            if (lunchTime.TotalMinutes > 60)
+            {
+                clockOut = dateTimePicker1.Time.Add(lunchTime).Add(new TimeSpan(8, 0, 0));
+                lunchLabel.Text = "1:" + (lunchTime.Minutes).ToString("D2");
+            }
+            else
+            {
+                clockOut = dateTimePicker1.Time.Add(new TimeSpan(9, 0, 0));
+                lunchLabel.Text = "1:00";
+            }
+
+            clockOutLabel.Text = clockOut.Hours.ToString("D2") + ":" + clockOut.Minutes.ToString("D2");
+        }
+
+        private void SetBreak()
+        {
+            TimeSpan breakTime = dateTimePicker3.Time.Add(TimeSpan.FromTicks(clockOut.Subtract(dateTimePicker3.Time).Ticks / 2));
+            breakLabel.Text = breakTime.Hours.ToString("D2") + ":" + breakTime.Minutes.ToString("D2");
         }
 
         private void SetupToast()
