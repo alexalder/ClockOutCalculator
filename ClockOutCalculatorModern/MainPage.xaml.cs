@@ -1,8 +1,12 @@
 ﻿using Microsoft.QueryStringDotNET;
 using Microsoft.Toolkit.Uwp.Notifications; // Notifications library
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.Storage;
+using Windows.UI.Core;
 using Windows.UI.Notifications;
 using Windows.UI.Popups;
 using Windows.UI.Xaml.Controls;
@@ -19,15 +23,26 @@ namespace ClockOutCalculatorModern
         TimeSpan clockOut;
         ToastNotifier notificationManager = ToastNotificationManager.CreateToastNotifier();
         ScheduledToastNotification toast;
+        List<TimePicker> timePickers = new List<TimePicker>();
 
         public MainPage()
         {
             this.InitializeComponent();
-            ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
-            dateTimePicker1.Time = (TimeSpan)localSettings.Values["picker1"];
-            dateTimePicker2.Time = (TimeSpan)localSettings.Values["picker2"];
-            dateTimePicker3.Time = (TimeSpan)localSettings.Values["picker3"];
+            timePickers.Add(dateTimePicker1);
+            timePickers.Add(dateTimePicker2);
+            timePickers.Add(dateTimePicker3);
+            InitializePickers();
+            Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow
+        .Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => GetFromWebAsync());
             SetupStartup();
+
+        }
+
+        private void InitializePickers()
+        {
+            ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+            foreach (TimePicker p in timePickers)
+                p.Time = (TimeSpan)localSettings.Values["picker"+(timePickers.IndexOf(p)+1)];
         }
 
         private void dateTimePicker1_TimeChanged(object sender, TimePickerValueChangedEventArgs e)
@@ -186,6 +201,21 @@ namespace ClockOutCalculatorModern
             }
         }
 
+        private async Task<bool> GetFromWebAsync()
+        {
+            //Insert your own method here
+            List<TimeSpan> times = await WebLoader.GetFromWebAsync();
+            if (times.Any())
+            {
+                for (int i = 0; i < 3; i++)
+                    timePickers[i].Time = times[i];
+                return true;
+            }
+            else
+                return false;
+        }
+
+
         async private void SetupStartup()
         {
             StartupTask startupTask = await StartupTask.GetAsync("MyStartupId");
@@ -215,6 +245,11 @@ namespace ClockOutCalculatorModern
                     //Debug.WriteLine("Startup is enabled.");
                     break;
             }
+        }
+
+        private async void refreshButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            var task = await GetFromWebAsync();
         }
     }
 }
