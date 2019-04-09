@@ -1,5 +1,5 @@
 ﻿using Microsoft.QueryStringDotNET;
-using Microsoft.Toolkit.Uwp.Notifications; // Notifications library
+using Microsoft.Toolkit.Uwp.Notifications; 
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,13 +11,8 @@ using Windows.UI.Notifications;
 using Windows.UI.Popups;
 using Windows.UI.Xaml.Controls;
 
-// The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
-
 namespace ClockOutCalculatorModern
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
     public sealed partial class MainPage : Page
     {
         TimeSpan clockOut;
@@ -135,7 +130,6 @@ namespace ClockOutCalculatorModern
         {
             if (toast != null)
                 notificationManager.RemoveFromSchedule(toast);
-            // In a real app, these would be initialized with actual data
             string title = "ClockOutCalculator";
             string content = "Ora di uscire!";
             string image = "https://picsum.photos/360/202?image=883";
@@ -177,7 +171,6 @@ namespace ClockOutCalculatorModern
             ToastContent toastContent = new ToastContent()
             {
                 Visual = visual,
-                //Actions = actions,
 
                 // Arguments when the user taps body of toast
                 Launch = new QueryString()
@@ -186,7 +179,6 @@ namespace ClockOutCalculatorModern
                     { "conversationId", conversationId.ToString() }
                 }.ToString()
             };
-            //var toast = new ToastNotification(toastContent.GetXml());
 
             DateTimeOffset toastTime = new DateTimeOffset(DateTime.Today.Add(clockOut));
 
@@ -206,34 +198,34 @@ namespace ClockOutCalculatorModern
 
         private async Task<bool> GetFromWebAsync()
         {
-            //progressBar.IsEnabled = true;
-            progressBar.IsIndeterminate = true;
-            bool res = false;
-            //Insert your own method here
-            List<TimeSpan> times = await WebLoader.GetFromWebAsync();
-            if (times.Any())
+            try
             {
-                for (int i = 0; i < times.Count; i++)
+                progressBar.IsIndeterminate = true;
+                //Insert your own method here
+                List<TimeSpan> times = await WebLoader.GetFromWebAsync();
+                for (int i = 0; i < times.Count && i < 3; i++)
                     timePickers[i].Time = times[i];
-                res = true;
+                return true;
             }
-            //progressBar.IsEnabled = false;
-            progressBar.IsIndeterminate = false;
-            return res;
+            catch (Exception)
+            {
+                return false;
+            }
+            finally
+            {
+                progressBar.IsIndeterminate = false;
+            }
         }
 
 
         async private void SetupStartup()
         {
             StartupTask startupTask = await StartupTask.GetAsync("MyStartupId");
-            //requestResult.Text = startupTask.State.ToString();
             switch (startupTask.State)
             {
                 case StartupTaskState.Disabled:
                     // Task is disabled but can be enabled.
                     StartupTaskState newState = await startupTask.RequestEnableAsync();
-                    //requestResult.Text = newState.ToString();
-                    //Debug.WriteLine("Request to enable startup, result = {0}", newState);
                     break;
                 case StartupTaskState.DisabledByUser:
                     // Task is disabled and user must enable it manually.
@@ -245,11 +237,8 @@ namespace ClockOutCalculatorModern
                     await dialog.ShowAsync();
                     break;
                 case StartupTaskState.DisabledByPolicy:
-                    //Debug.WriteLine(
-                    //"Startup disabled by group policy, or not supported on this device");
                     break;
                 case StartupTaskState.Enabled:
-                    //Debug.WriteLine("Startup is enabled.");
                     break;
             }
         }
