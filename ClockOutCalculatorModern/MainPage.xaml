@@ -21,9 +21,10 @@
         </Image>
         <TextBox x:Name="lunchLabel" HorizontalAlignment="Left" Margin="61,119,0,0" Text="1:00" VerticalAlignment="Top" BorderBrush="{x:Null}" Height="34" Width="54" FontSize="18"/>
         <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Margin="10,131,0,0" Text="Durata pranzo" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="8"/>
-        <TextBox x:Name="breakLabel" HorizontalAlignment="Left" Margin="498,170,0,0" Text="10:00" VerticalAlignment="Top" BorderBrush="{x:Null}" Height="34" Width="64" FontSize="18" TextAlignment="Left"/>
-        <TextBlock x:Name="textBlock_Copy" HorizontalAlignment="Left" Margin="457,175,0,0" Text="Pausa" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="16" RenderTransformOrigin="1.227,0.608"/>
-        <Button x:Name="refreshButton" Content="Refresh" HorizontalAlignment="Left" Margin="498,249,0,0" VerticalAlignment="Top" Click="refreshButton_Click"/>
+        <TextBox x:Name="breakLabel" HorizontalAlignment="Left" Margin="499,157,0,0" Text="10:00" VerticalAlignment="Top" BorderBrush="{x:Null}" Height="34" Width="64" FontSize="18" TextAlignment="Left"/>
+        <TextBlock x:Name="textBlock_Copy" HorizontalAlignment="Left" Margin="458,162,0,0" Text="Pausa" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="16" RenderTransformOrigin="1.227,0.608"/>
+        <Button FontFamily="Segoe MDL2 Assets" x:Name="refreshButton" Content="&#xE72C;" HorizontalAlignment="Left" Margin="506,233,0,0" VerticalAlignment="Top" Click="refreshButton_Click" FocusVisualSecondaryBrush="#00000000" FocusVisualPrimaryBrush="Transparent" Background="Transparent" Height="55" Width="55" FontSize="28"/>
+        <ProgressBar x:Name="progressBar" HorizontalAlignment="Left" Height="23" Margin="10,162,0,0" VerticalAlignment="Top" Width="406" IsIndeterminate="True" Foreground="White" FocusVisualSecondaryBrush="#00000000" Background="Transparent"/>
 
     </Grid>
 </Page>

@@ -206,16 +206,20 @@ namespace ClockOutCalculatorModern
 
         private async Task<bool> GetFromWebAsync()
         {
+            //progressBar.IsEnabled = true;
+            progressBar.IsIndeterminate = true;
+            bool res = false;
             //Insert your own method here
             List<TimeSpan> times = await WebLoader.GetFromWebAsync();
             if (times.Any())
             {
-                for (int i = 0; i < 3; i++)
+                for (int i = 0; i < times.Count; i++)
                     timePickers[i].Time = times[i];
-                return true;
+                res = true;
             }
-            else
-                return false;
+            //progressBar.IsEnabled = false;
+            progressBar.IsIndeterminate = false;
+            return res;
         }
 
 
