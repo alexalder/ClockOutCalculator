@@ -35,14 +35,17 @@ namespace ClockOutCalculatorModern
             Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow
         .Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => GetFromWebAsync());
             SetupStartup();
-
         }
 
         private void InitializePickers()
         {
             ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
             foreach (TimePicker p in timePickers)
-                p.Time = (TimeSpan)localSettings.Values["picker"+(timePickers.IndexOf(p)+1)];
+            {
+                if (localSettings.Values["picker" + (timePickers.IndexOf(p) + 1)] != null)
+                    p.Time = (TimeSpan)localSettings.Values["picker" + (timePickers.IndexOf(p) + 1)];
+            }
+                
         }
 
         private void dateTimePicker1_TimeChanged(object sender, TimePickerValueChangedEventArgs e)
