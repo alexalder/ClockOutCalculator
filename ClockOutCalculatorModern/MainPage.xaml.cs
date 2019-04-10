@@ -1,14 +1,18 @@
 ﻿using Microsoft.QueryStringDotNET;
-using Microsoft.Toolkit.Uwp.Notifications; 
+using Microsoft.Toolkit.Uwp.Notifications;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
+using Windows.ApplicationModel.Core;
+using Windows.Foundation;
+using Windows.Security.Credentials;
 using Windows.Storage;
 using Windows.UI.Core;
 using Windows.UI.Notifications;
 using Windows.UI.Popups;
+using Windows.UI.ViewManagement;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 namespace ClockOutCalculatorModern
@@ -23,53 +27,59 @@ namespace ClockOutCalculatorModern
         public MainPage()
         {
             this.InitializeComponent();
-            timePickers.Add(dateTimePicker1);
-            timePickers.Add(dateTimePicker2);
-            timePickers.Add(dateTimePicker3);
+
             InitializePickers();
             Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow
         .Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => GetFromWebAsync());
             SetupStartup();
+            SetLaunchSize();
+        }
+
+        private void SetLaunchSize()
+        {
+            ApplicationView.PreferredLaunchViewSize = new Size(600, 345);
+            ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
         }
 
         private void InitializePickers()
         {
+            timePickers.Add(dateTimePicker1);
+            timePickers.Add(dateTimePicker2);
+            timePickers.Add(dateTimePicker3);
             ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
             foreach (TimePicker p in timePickers)
             {
-                if (localSettings.Values["picker" + (timePickers.IndexOf(p) + 1)] != null)
-                    p.Time = (TimeSpan)localSettings.Values["picker" + (timePickers.IndexOf(p) + 1)];
+                if (localSettings.Values["dateTimePicker" + (timePickers.IndexOf(p) + 1)] != null)
+                {
+                    p.Time = (TimeSpan)localSettings.Values["dateTimePicker" + (timePickers.IndexOf(p) + 1)];
+                }
             }
-                
+
         }
 
         private void dateTimePicker1_TimeChanged(object sender, TimePickerValueChangedEventArgs e)
         {
-            if (CalculateClockOff())
-            {
-                SetupToast();
-                SaveTime((TimePicker)sender, "picker1");
-            }
-                
+            DateChanged(sender);
         }
 
         private void dateTimePicker2_TimeChanged(object sender, TimePickerValueChangedEventArgs e)
         {
-            if (CalculateClockOff())
-            {
-                SetupToast();
-                SaveTime((TimePicker)sender, "picker2");
-            }
+            DateChanged(sender);
         }
 
         private void dateTimePicker3_TimeChanged(object sender, TimePickerValueChangedEventArgs e)
         {
+            DateChanged(sender);
+        }
+
+        private void DateChanged(object sender)
+        {
+            TimePicker picker = sender as TimePicker;
             if (CalculateClockOff())
             {
                 SetupToast();
-                SaveTime((TimePicker)sender, "picker3");
+                SaveTime(picker, picker.Name);
             }
-
         }
 
         private void SaveTime(TimePicker timePicker, string pickerName)
@@ -126,10 +136,41 @@ namespace ClockOutCalculatorModern
             breakLabel.Text = breakTime.Hours.ToString("D2") + ":" + breakTime.Minutes.ToString("D2");
         }
 
+        private async Task<bool> GetFromWebAsync()
+        {
+            try
+            {
+                progressBar.IsIndeterminate = true;
+                ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+                string username = (string)localSettings.Values["username"];
+                PasswordVault vault = new PasswordVault();
+                string password = vault.Retrieve("ClockOutCalculator", username).Password;
+                //Insert your own method here
+                List<TimeSpan> times = await WebLoader.GetFromWebAsync(username, password);
+                for (int i = 0; i < times.Count && i < 3; i++)
+                {
+                    timePickers[i].Time = times[i];
+                }
+
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            finally
+            {
+                progressBar.IsIndeterminate = false;
+            }
+        }
+
         private void SetupToast()
         {
             if (toast != null)
+            {
                 notificationManager.RemoveFromSchedule(toast);
+            }
+
             string title = "ClockOutCalculator";
             string content = "Ora di uscire!";
             string image = "https://picsum.photos/360/202?image=883";
@@ -196,29 +237,7 @@ namespace ClockOutCalculatorModern
             }
         }
 
-        private async Task<bool> GetFromWebAsync()
-        {
-            try
-            {
-                progressBar.IsIndeterminate = true;
-                //Insert your own method here
-                List<TimeSpan> times = await WebLoader.GetFromWebAsync();
-                for (int i = 0; i < times.Count && i < 3; i++)
-                    timePickers[i].Time = times[i];
-                return true;
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-            finally
-            {
-                progressBar.IsIndeterminate = false;
-            }
-        }
-
-
-        async private void SetupStartup()
+        private async void SetupStartup()
         {
             StartupTask startupTask = await StartupTask.GetAsync("MyStartupId");
             switch (startupTask.State)
@@ -245,7 +264,23 @@ namespace ClockOutCalculatorModern
 
         private async void refreshButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
-            var task = await GetFromWebAsync();
+            bool task = await GetFromWebAsync();
+        }
+
+        private async void loginButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            CoreApplicationView newView = CoreApplication.CreateNewView();
+            int newViewId = 0;
+            await newView.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                Window.Current.Content = new LoginPage();
+                // You have to activate the window in order to show it later.
+                Window.Current.Activate();
+
+                newViewId = ApplicationView.GetForCurrentView().Id;
+            });
+            bool viewShown = await ApplicationViewSwitcher.TryShowAsStandaloneAsync(newViewId);
+
         }
     }
 }
