@@ -145,7 +145,6 @@ namespace ClockOutCalculatorModern
                 string username = (string)localSettings.Values["username"];
                 if (username == null)
                 {
-                    OpenLoginWindow();
                     return false;
                 }
                 else
