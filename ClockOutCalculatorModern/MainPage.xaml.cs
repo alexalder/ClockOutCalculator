@@ -143,16 +143,24 @@ namespace ClockOutCalculatorModern
                 progressBar.IsIndeterminate = true;
                 ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
                 string username = (string)localSettings.Values["username"];
-                PasswordVault vault = new PasswordVault();
-                string password = vault.Retrieve("ClockOutCalculator", username).Password;
-                //Insert your own method here
-                List<TimeSpan> times = await WebLoader.GetFromWebAsync(username, password);
-                for (int i = 0; i < times.Count && i < 3; i++)
+                if (username == null)
                 {
-                    timePickers[i].Time = times[i];
+                    OpenLoginWindow();
+                    return false;
+                }
+                else
+                {
+                    PasswordVault vault = new PasswordVault();
+                    string password = vault.Retrieve("ClockOutCalculator", username).Password;
+                    //Insert your own method here
+                    List<TimeSpan> times = await WebLoader.GetFromWebAsync(username, password);
+                    for (int i = 0; i < times.Count && i < 3; i++)
+                    {
+                        timePickers[i].Time = times[i];
+                    }
+                    return true;
                 }
 
-                return true;
             }
             catch (Exception)
             {
@@ -162,6 +170,21 @@ namespace ClockOutCalculatorModern
             {
                 progressBar.IsIndeterminate = false;
             }
+        }
+
+        private async void OpenLoginWindow()
+        {
+            CoreApplicationView newView = CoreApplication.CreateNewView();
+            int newViewId = 0;
+            await newView.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            {
+                Window.Current.Content = new LoginPage();
+                // You have to activate the window in order to show it later.
+                Window.Current.Activate();
+
+                newViewId = ApplicationView.GetForCurrentView().Id;
+            });
+            bool viewShown = await ApplicationViewSwitcher.TryShowAsStandaloneAsync(newViewId);
         }
 
         private void SetupToast()
@@ -269,18 +292,7 @@ namespace ClockOutCalculatorModern
 
         private async void loginButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
-            CoreApplicationView newView = CoreApplication.CreateNewView();
-            int newViewId = 0;
-            await newView.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
-            {
-                Window.Current.Content = new LoginPage();
-                // You have to activate the window in order to show it later.
-                Window.Current.Activate();
-
-                newViewId = ApplicationView.GetForCurrentView().Id;
-            });
-            bool viewShown = await ApplicationViewSwitcher.TryShowAsStandaloneAsync(newViewId);
-
+            OpenLoginWindow();
         }
     }
 }
