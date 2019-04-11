@@ -14,6 +14,7 @@ using Windows.UI.Popups;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Navigation;
 
 namespace ClockOutCalculatorModern
 {
@@ -27,18 +28,11 @@ namespace ClockOutCalculatorModern
         public MainPage()
         {
             this.InitializeComponent();
-
             InitializePickers();
             Windows.ApplicationModel.Core.CoreApplication.MainView.CoreWindow
         .Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => GetFromWebAsync());
             SetupStartup();
-            SetLaunchSize();
-        }
-
-        private void SetLaunchSize()
-        {
-            ApplicationView.PreferredLaunchViewSize = new Size(600, 345);
-            ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
+            
         }
 
         private void InitializePickers()

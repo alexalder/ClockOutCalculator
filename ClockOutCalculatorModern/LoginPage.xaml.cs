@@ -14,8 +14,6 @@ namespace ClockOutCalculatorModern
         public LoginPage()
         {
             this.InitializeComponent();
-            ApplicationView.PreferredLaunchViewSize = new Size(600, 345);
-            ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
         }
 
         private void acceptButton_Click(object sender, RoutedEventArgs e)
