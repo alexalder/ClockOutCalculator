@@ -13,6 +13,8 @@
         <TimePicker x:Name="dateTimePicker1" HorizontalAlignment="Left" Margin="26,10,0,0" VerticalAlignment="Top" Time="09:00:00" ClockIdentifier="24HourClock" TimeChanged="dateTimePicker1_TimeChanged"/>
         <TimePicker x:Name="dateTimePicker2" HorizontalAlignment="Left" Margin="26,49,0,0" VerticalAlignment="Top" Time="13:00:00" ClockIdentifier="24HourClock" TimeChanged="dateTimePicker2_TimeChanged"/>
         <TimePicker x:Name="dateTimePicker3" HorizontalAlignment="Left" Margin="26,88,0,0" VerticalAlignment="Top" Time="14:00:00" ClockIdentifier="24HourClock" TimeChanged="dateTimePicker3_TimeChanged"/>
+        <TextBlock x:Name="addHoursBlock" HorizontalAlignment="Left" Margin="294,15,0,0" Text="Ore da recuperare" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="8"/>
+        <TextBox x:Name="addHoursBox" HorizontalAlignment="Left" Margin="375,0,0,0" Text="0" VerticalAlignment="Top" BorderBrush="{x:Null}" Height="35" Width="54" FontSize="18"/>
         <TextBlock x:Name="clockOutLabel" HorizontalAlignment="Left" Margin="294,16,0,0" Text="18:00" TextWrapping="Wrap" VerticalAlignment="Top" Height="173" Width="289" FontSize="120" FontWeight="Normal"/>
         <TextBox x:Name="lunchLabel" HorizontalAlignment="Left" Margin="77,120,0,0" Text="1:00" VerticalAlignment="Top" BorderBrush="{x:Null}" Height="35" Width="54" FontSize="18"/>
         <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Margin="26,133,0,0" Text="Durata pranzo" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="8"/>

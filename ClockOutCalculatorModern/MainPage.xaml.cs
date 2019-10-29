@@ -48,7 +48,7 @@ namespace ClockOutCalculatorModern
                     p.Time = (TimeSpan)localSettings.Values["dateTimePicker" + (timePickers.IndexOf(p) + 1)];
                 }
             }
-
+            addHoursBox.TextChanged += addHoursBox_Changed;
         }
 
         private void dateTimePicker1_TimeChanged(object sender, TimePickerValueChangedEventArgs e)
@@ -69,10 +69,12 @@ namespace ClockOutCalculatorModern
         private void DateChanged(object sender)
         {
             TimePicker picker = sender as TimePicker;
+
             if (CalculateClockOff())
             {
                 SetupToast();
-                SaveTime(picker, picker.Name);
+                if (picker != null)
+                    SaveTime(picker, picker.Name);
             }
         }
 
@@ -110,6 +112,8 @@ namespace ClockOutCalculatorModern
 
         private void SetClockOut(TimeSpan lunchTime)
         {
+            double addHours = 0;
+            Double.TryParse(addHoursBox.Text, out addHours);
             if (lunchTime.TotalMinutes > 60)
             {
                 clockOut = dateTimePicker1.Time.Add(lunchTime).Add(new TimeSpan(8, 0, 0));
@@ -120,6 +124,8 @@ namespace ClockOutCalculatorModern
                 clockOut = dateTimePicker1.Time.Add(new TimeSpan(9, 0, 0));
                 lunchLabel.Text = "1:00";
             }
+
+            clockOut = clockOut.Add(TimeSpan.FromHours(addHours));
 
             clockOutLabel.Text = clockOut.Hours.ToString("D2") + ":" + clockOut.Minutes.ToString("D2");
         }
@@ -286,6 +292,11 @@ namespace ClockOutCalculatorModern
         private async void loginButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
             OpenLoginWindow();
+        }
+
+        private async void addHoursBox_Changed(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            DateChanged(sender);
         }
     }
 }

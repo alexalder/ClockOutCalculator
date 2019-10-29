@@ -19,12 +19,12 @@
     <WindowsXamlEnableOverview>true</WindowsXamlEnableOverview>
     <PackageCertificateKeyFile>ClockOutCalculatorModern_TemporaryKey.pfx</PackageCertificateKeyFile>
     <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
-    <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
+    <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
     <AppxBundle>Always</AppxBundle>
     <AppxBundlePlatforms>x86|x64</AppxBundlePlatforms>
-    <AppInstallerUpdateFrequency>1</AppInstallerUpdateFrequency>
+    <AppInstallerUpdateFrequency>0</AppInstallerUpdateFrequency>
     <AppInstallerCheckForUpdateFrequency>OnApplicationRun</AppInstallerCheckForUpdateFrequency>
-    <AppxPackageDir>C:\Users\AlessandroPettazzoni\source\repos\ClockOutCalculatorModern\ClockOutCalculatorModern\AppPackages\3.0\</AppxPackageDir>
+    <AppxPackageDir>C:\Users\apettazzoni\OneDrive\Exprivia\repos\ClockOutCalculatorModern\ClockOutCalculatorModern\AppPackages\3.0</AppxPackageDir>
     <PackageCertificateThumbprint>D65A8F27A94B6298BD23C0B4FC287D2F82DB5408</PackageCertificateThumbprint>
     <AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
     <GenerateTestArtifacts>True</GenerateTestArtifacts>
