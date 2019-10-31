@@ -188,9 +188,11 @@ namespace ClockOutCalculatorModern
 
         private void SetupToast()
         {
-            if (toast != null)
+            var notifications = notificationManager.GetScheduledToastNotifications();
+
+            for (int i = 0; i < notifications.Count; i++)
             {
-                notificationManager.RemoveFromSchedule(toast);
+                notificationManager.RemoveFromSchedule(notifications[i]);
             }
 
             string title = "ClockOutCalculator";
